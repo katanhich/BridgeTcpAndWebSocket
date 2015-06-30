@@ -1,29 +1,44 @@
+'use strict';
+
 var net = require('net');
- 
-var server = net.createServer(function(socket) {
+var config = require('./config');
 
-  console.log('CONNECTED: ' + socket.remoteAddress +':'+ socket.remotePort);
+function responseTime(uuid) {
+    var reponse = {
+        uuid: uuid,
+        return: new Date().toString()
+    };
+    return JSON.stringify(reponse);
+}
 
-  socket.on('data', function(data) {
-    var json = JSON.parse(data.toString('utf-8'));
-    console.log('Data: ' + data.toString('utf-8'));
-    console.log(json)
-    console.log(json.query)
-    if (json.query === 'ask_time') {
-      var time = new Date();
-      socket.write(time.toString());
-    } else {
-      socket.write('Wrong query');
-    }
-  });
+function reponseError(uuid, err) {
+    var reponse = {
+        uuid: uuid,
+        return: err
+    };
+    return JSON.stringify(reponse);
+}
 
-  socket.on('close', function() {
-      console.log('CLOSED: ');
-   });
-  
+var server = net.createServer(function (socket) {
+
+    console.log('CONNECTED: ' + socket.remoteAddress + ':' + socket.remotePort);
+
+    socket.on('data', function (data) {
+            try {
+                var json = JSON.parse(data.toString('utf8'));
+                console.log('Received data: ' + data.toString());
+                if (json.query === 'ask_time') {
+                    socket.write(responseTime(json.uuid));
+                } else {
+                    socket.write(reponseError(json.uuid, 'Wrong query'));
+                }
+            } catch (e) {
+                socket.write(reponseError('server error'));
+            }
+        }
+    );
 });
 
-var port = 3000;
-server.listen(3000, function() { 
-  console.log('server is listening on ' +  3000);
+server.listen(config.server1_port, function () {
+    console.log('server is listening on ' + config.server1_port);
 });

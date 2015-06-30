@@ -1,26 +1,10 @@
 {
-  "name": "ws-tcp-bridge",
+  "name": "Anh_Phuoc_Dep_Trai",
   "version": "1.0.0",
   "description": "Proxy between websocket and tcp servers",
-  "bin" : { "ws-tcp-bridge" : "./ws-tcp-bridge" },
   "dependencies": {
+    "net": "^1.0.2",
     "optimist": "~0.3.5",
-    "ws": "~0.4.23"
-  },
-  "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/andrewchambers/ws-tcp-bridge.git"
-  },
-  "keywords": [
-    "websockets",
-    "ws",
-    "proxy",
-    "tcp"
-  ],
-  "author": "andrewchamberss@gmail.com",
-  "license": "BSD"
+    "ws": "^0.4.32"
+  }
 }
