@@ -41,7 +41,7 @@ function initSocketCallbacks(state, ws, tcpSocket) {
     });
 
     tcpSocket.on('error', function (e) {
-        console.log('socket error');
+        console.log('tcp socket error');
         console.log(e);
         ws.removeAllListeners('close');
         tcpSocket.removeAllListeners('close');
@@ -68,17 +68,18 @@ function initSocketCallbacks(state, ws, tcpSocket) {
     });
 
     ws.on('message', function (message, flags) {
+        StoredSocket.saveClientWebSocket(message, ws);
+
         if (!state.sReady) {
             state.sBuffer.push(message);
         } else {
-            StoredSocket.saveClientWebSocket(message, ws);
             tcpSocket.write(message);
         }
     });
 }
 
 module.exports = function () {
-    console.log('forwarding port ' + config.web_socket_port + ' to ' + config.server1_host);
+    console.log('forwarding web socket port ' + config.web_socket_port + ' to tcp port ' + config.server1_host);
 
     var wss = new ws_module.Server({port: config.web_socket_port});
     wss.on('connection', function (ws) {
@@ -86,7 +87,7 @@ module.exports = function () {
 
         var state = {
             sReady: false,
-            wsReady: true, // there is no callback so i assume its already connected
+            wsReady: true,
             wsBuffer: [],
             sBuffer: []
         };

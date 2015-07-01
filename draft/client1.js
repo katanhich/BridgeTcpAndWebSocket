@@ -8,6 +8,14 @@ client.connect(3000, '127.0.0.1', function() {
 	client.write(JSON.stringify(data));
 });
 
+client.on('open', function () {
+	console.log('open connect roi nha')
+});
+
+client.on('connect', function () {
+	console.log('connect roi nha')
+});
+
 client.on('data', function(data) {
 	console.log('Received: ' + data);
 	client.destroy(); // kill client after server's response
