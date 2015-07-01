@@ -1,14 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b983d8c0-68d7-4c6a-a513-002817de8862" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/draft/client1.js" afterPath="$PROJECT_DIR$/draft/client1.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/storedsocket.js" afterPath="$PROJECT_DIR$/storedsocket.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tcp.server.js" afterPath="$PROJECT_DIR$/tcp.server.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/websocket.server.js" afterPath="$PROJECT_DIR$/websocket.server.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/draft/ws.js" afterPath="$PROJECT_DIR$/draft/ws.js" />
-    </list>
+    <list default="true" id="b983d8c0-68d7-4c6a-a513-002817de8862" name="Default" comment="" />
     <ignored path="BridgeTcpAndWebSocket.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
