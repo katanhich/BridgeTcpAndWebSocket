@@ -8,8 +8,13 @@ module.exports = function() {
         console.log('TCP CONNECTED: ' + socket.remoteAddress + ':' + socket.remotePort);
 
         socket.on('data', function (data) {
-            StoredSocket.sendMessage(data);
-            socket.write('success!!!');
+            StoredSocket.sendMessage(data, function(err) {
+                if (err) {
+                    socket.write('send fail: ' + err.message);
+                } else {
+                    socket.write('send success!!!');
+                }
+            });
         });
     });
 

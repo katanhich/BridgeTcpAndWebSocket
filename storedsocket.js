@@ -10,21 +10,25 @@ function getUUId(data) {
 module.exports.saveClientWebSocket = function(data, ws) {
     try {
         var uuid = getUUId(data);
-        ClientWebSocket.uuid = ws;
+        ClientWebSocket[uuid] = ws;
     } catch (e) {
         console.log(e.stack);
     }
 }
 
-module.exports.sendMessage = function (data) {
+module.exports.sendMessage = function(data, callback) {
     try {
         var uuid = getUUId(data);
-        var socket = ClientWebSocket.uuid;
+        var socket = ClientWebSocket[uuid];
         if (socket && data.length > 0) {
             socket.send(data);
             data = null;
+            callback();
+        } else {
+            callback(new Error('Cannot find uuid'));
         }
     } catch (e) {
         console.log(e.stack);
+        callback(e);
     }
 }
