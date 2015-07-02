@@ -16,6 +16,10 @@ module.exports = function() {
                 }
             });
         });
+
+        socket.on('close', function (err) {
+            console.log('TCP connection from server2 is closed')
+        });
     });
 
     server.listen(config.tcp_socket_port, function() {
