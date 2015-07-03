@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b983d8c0-68d7-4c6a-a513-002817de8862" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server2.js" afterPath="$PROJECT_DIR$/server2.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tcp.server.js" afterPath="$PROJECT_DIR$/tcp.server.js" />
-    </list>
+    <list default="true" id="b983d8c0-68d7-4c6a-a513-002817de8862" name="Default" comment="" />
     <ignored path="BridgeTcpAndWebSocket.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -84,10 +81,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="websocket.server.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="websocket.server.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/websocket.server.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
+            <state vertical-scroll-proportion="0.60556257">
               <caret line="89" column="26" selection-start-line="89" selection-start-column="26" selection-end-line="89" selection-end-column="26" />
               <folding />
             </state>
@@ -114,10 +111,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="tcp.server.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="tcp.server.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/tcp.server.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.60556257">
+            <state vertical-scroll-proportion="0.0">
               <caret line="20" column="62" selection-start-line="20" selection-start-column="62" selection-end-line="20" selection-end-column="62" />
               <folding />
             </state>
@@ -225,7 +222,7 @@
   <component name="PropertiesComponent">
     <property name="settings.editor.selected.configurable" value="reference.settings.ide.settings.spelling" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../NodeBeeFlower" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="HbShouldOpenHtmlAsHb" value="" />
     <property name="FullScreen" value="true" />
@@ -556,18 +553,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/websocket.server.js">
+    <entry file="file://$PROJECT_DIR$/tcp.server.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="89" column="26" selection-start-line="89" selection-start-column="26" selection-end-line="89" selection-end-column="26" />
+          <caret line="20" column="62" selection-start-line="20" selection-start-column="62" selection-end-line="20" selection-end-column="62" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tcp.server.js">
+    <entry file="file://$PROJECT_DIR$/websocket.server.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.60556257">
-          <caret line="20" column="62" selection-start-line="20" selection-start-column="62" selection-end-line="20" selection-end-column="62" />
+          <caret line="89" column="26" selection-start-line="89" selection-start-column="26" selection-end-line="89" selection-end-column="26" />
           <folding />
         </state>
       </provider>
