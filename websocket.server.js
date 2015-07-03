@@ -5,32 +5,9 @@ var net = require('net');
 var StoredSocket = require('./storedsocket');
 var config = require('./config');
 
-function initSocketCallbacks(ws) {
-    var uuid;
-
-    ws.on('error', function (e) {
-        console.log('websocket error');
-        console.log(e);
-        StoredSocket.remove(uuid);
-        ws.removeAllListeners('close');
-        ws.close();
-    });
-
-    ws.on('close', function() {
-        StoredSocket.remove(uuid);
-        console.log('Ws is closed with uuid: ' + uuid);
-    });
-
-    ws.on('message', function (message) {
-        uuid = StoredSocket.getUUId(message);
-
-        StoredSocket.saveClientWebSocket(message, ws);
-        tcpConnectToServer1.write(message);
-    });
-};
-
 var isConnectedToServer1 = false;
 var tcpConnectToServer1;
+
 function initConnectToServerOne() {
     tcpConnectToServer1 = net.connect(config.server1_port, config.server1_host);
 
@@ -42,12 +19,6 @@ function initConnectToServerOne() {
     tcpConnectToServer1.on('data', function (data) {
         //ws.send(data, {binary: true, mask: false});
         StoredSocket.sendMessage(data, function(err) {
-            //if (err) {
-            //    tcpConnectToServer1.write('Cannot send message to client');
-            //} else {
-            //    tcpConnectToServer1.write('Send successfully message to client');
-            //}
-
             if (err) {
                 console.log('Cannot send message to client');
             } else {
@@ -70,13 +41,42 @@ function initConnectToServerOne() {
     });
 }
 
-module.exports = function () {
-    console.log('forwarding web socket port ' + config.web_socket_port + ' to tcp port ' + config.server1_host);
+function sendDataToServerOne(message) {
+    if (!isConnectedToServer1) {
+        initConnectToServerOne();
+    }
+    tcpConnectToServer1.write(message);
+}
 
-    initConnectToServerOne();
-
+function startWebSocket() {
     var wss = new ws_module.Server({host: config.web_socket_host, port: config.web_socket_port});
     wss.on('connection', function (ws) {
-        initSocketCallbacks(ws);
+        var uuid;
+
+        ws.on('error', function (e) {
+            console.log('websocket error');
+            console.log(e);
+            StoredSocket.remove(uuid);
+            ws.removeAllListeners('close');
+            ws.close();
+        });
+
+        ws.on('close', function() {
+            StoredSocket.remove(uuid);
+            console.log('Ws is closed with uuid: ' + uuid);
+        });
+
+        ws.on('message', function (message) {
+            uuid = StoredSocket.getUUId(message);
+
+            StoredSocket.saveClientWebSocket(message, ws);
+            sendDataToServerOne(message);
+        });
     });
 }
+
+module.exports = function() {
+    console.log('forwarding web socket port ' + config.web_socket_port + ' to tcp port ' + config.server1_host);
+    initConnectToServerOne();
+    startWebSocket();
+};
