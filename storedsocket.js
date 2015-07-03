@@ -12,6 +12,7 @@ module.exports.saveClientWebSocket = function(data, ws) {
         var uuid = getUUId(data);
         ClientWebSocket[uuid] = ws;
     } catch (e) {
+        console.log('Data on error: ' + data);
         console.log(e.stack);
     }
 }
@@ -28,6 +29,7 @@ module.exports.sendMessage = function(data, callback) {
             callback(new Error('Cannot find uuid'));
         }
     } catch (e) {
+        console.log('Data on error: ' + data);
         console.log(e.stack);
         callback(e);
     }
