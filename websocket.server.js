@@ -75,7 +75,7 @@ module.exports = function () {
 
     initConnectToServerOne();
 
-    var wss = new ws_module.Server({port: config.web_socket_port});
+    var wss = new ws_module.Server({host: config.web_socket_host, port: config.web_socket_port});
     wss.on('connection', function (ws) {
         initSocketCallbacks(ws);
     });
