@@ -33,6 +33,8 @@ var server = net.createServer(function (socket) {
                     socket.write(reponseError(json.uuid, 'Wrong query'));
                 }
             } catch (e) {
+                console.log('Data on error: ' + data);
+                console.log(e.stack);
                 socket.write(reponseError('server error'));
             }
         }
