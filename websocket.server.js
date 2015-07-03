@@ -6,26 +6,24 @@ var StoredSocket = require('./storedsocket');
 var config = require('./config');
 
 function initSocketCallbacks(ws) {
-
-    console.log(ws)
-
-    ws.on('close', function () {
-        console.log('WS is closed: ' + ws.remoteAddress + ':' + ws.remotePort);
-    });
+    var uuid;
 
     ws.on('error', function (e) {
         console.log('websocket error');
         console.log(e);
+        StoredSocket.remove(uuid);
         ws.removeAllListeners('close');
         ws.close();
     });
 
-    ws.on('open', function() {
-
-        console.log('WS is open: ' + ws.remoteAddress + ':' + ws.remotePort);
+    ws.on('close', function() {
+        StoredSocket.remove(uuid);
+        console.log('Ws is closed with uuid: ' + uuid);
     });
 
     ws.on('message', function (message) {
+        uuid = StoredSocket.getUUId(message);
+
         StoredSocket.saveClientWebSocket(message, ws);
         tcpConnectToServer1.write(message);
     });

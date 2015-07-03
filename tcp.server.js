@@ -18,7 +18,11 @@ module.exports = function() {
         });
 
         socket.on('close', function (err) {
-            console.log('TCP connection from server2 is closed')
+            console.log('TCP connection from server2 is closed');
+        });
+
+        socket.on('error', function(err) {
+            console.log(err.stack);
         });
     });
 
