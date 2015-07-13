@@ -12,6 +12,8 @@ console.log(x);
 
 delete x['1'];
 
+delete x['1'];
+
 try {
     delete x['3'];
 } catch(e) {

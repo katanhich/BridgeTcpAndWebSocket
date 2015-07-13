@@ -1,82 +1,89 @@
 'use strict';
 
-var ws_module = require('ws');
+var WebSocketServer = require('ws').Server;
 var net = require('net');
 var StoredSocket = require('./storedsocket');
 var config = require('./config');
+var parseData = require('./parse-data');
 
-var isConnectedToServer1 = false;
-var tcpConnectToServer1;
+function initSocketCallbacks(state, ws, tcpSocket) {
 
-function initConnectToServerOne() {
-    tcpConnectToServer1 = net.connect(config.server1_port, config.server1_host);
+    function flushSocketBuffer() {
+        if (state.sBuffer.length > 0) {
+            tcpSocket.write(Buffer.concat(state.sBuffer));
+            state.sBuffer = [];
+        }
+    };
 
-    tcpConnectToServer1.on('connect', function () {
-        isConnectedToServer1 = true;
-        console.log('Connect to server1 successfully');
+    function closeWebSocket() {
+        ws.removeAllListeners('close');
+        ws.close();
+        StoredSocket.remove(state.uuid);
+    };
+
+    function closeTcpSocket() {
+        tcpSocket.removeAllListeners('close');
+        tcpSocket.end();
+        StoredSocket.remove(state.uuid);
+    };
+
+    function closeSockets() {
+        closeWebSocket();
+        closeTcpSocket();
+    };
+
+    tcpSocket.on('close', function() {
+        closeWebSocket();
     });
 
-    tcpConnectToServer1.on('data', function (data) {
-        //ws.send(data, {binary: true, mask: false});
-        StoredSocket.sendMessage(data, function(err) {
-            if (err) {
-                console.log('Cannot send message to client');
-            } else {
-                console.log('Send successfully message to client');
-            }
-        });
+    ws.on('close', function () {
+        closeTcpSocket();
     });
 
-    tcpConnectToServer1.on('close', function (error) {
-        isConnectedToServer1 = false;
-        console.log('Connection to server1 is closed');
-    });
-
-    tcpConnectToServer1.on('error', function (e) {
-        console.log('Connection to server1 error');
+    tcpSocket.on('error', function (e) {
+        console.log('tcp socket error on  client: ' + state.uuid);
         console.log(e);
-        tcpConnectToServer1.removeAllListeners('close');
-        tcpConnectToServer1.end();
-        isConnectedToServer1 = false;
+        closeSockets();
     });
-}
 
-function sendDataToServerOne(message) {
-    if (!isConnectedToServer1) {
-        initConnectToServerOne();
-    }
-    tcpConnectToServer1.write(message);
-}
-
-function startWebSocket() {
-    var wss = new ws_module.Server({host: config.web_socket_host, port: config.web_socket_port});
-    wss.on('connection', function (ws) {
-        var uuid;
-
-        ws.on('error', function (e) {
-            console.log('websocket error');
-            console.log(e);
-            StoredSocket.remove(uuid);
-            ws.removeAllListeners('close');
-            ws.close();
-        });
-
-        ws.on('close', function() {
-            StoredSocket.remove(uuid);
-            console.log('Ws is closed with uuid: ' + uuid);
-        });
-
-        ws.on('message', function (message) {
-            uuid = StoredSocket.getUUId(message);
-
-            StoredSocket.saveClientWebSocket(message, ws);
-            sendDataToServerOne(message);
-        });
+    ws.on('error', function (e) {
+        console.log('web socket error on client: ' + state.uuid);
+        console.log(e);
+        closeSockets();
     });
-}
+
+    tcpSocket.on('connect', function() {
+        state.sReady = true;
+        flushSocketBuffer();
+    });
+
+    tcpSocket.on('data', function(data) {
+        ws.send(data, {binary: true, mask: false});
+    });
+
+    ws.on('message', function(message) {
+        state.uuid = parseData.getUUId(message);
+        StoredSocket.saveClientWebSocket(message, ws);
+
+        if (state.sReady) {
+            tcpSocket.write(message);
+        } else {
+            state.sBuffer.push(message);
+        }
+    });
+};
 
 module.exports = function() {
     console.log('forwarding web socket port ' + config.web_socket_port + ' to tcp port ' + config.server1_host);
-    initConnectToServerOne();
-    startWebSocket();
+
+    var wss = new WebSocketServer({host: config.web_socket_host, port: config.web_socket_port});
+    wss.on('connection', function (ws) {
+        var state = {
+            sReady: false, // tcp socket is ready or not
+            sBuffer: [], // buffer for tcpSocket
+            uuid: ''
+        };
+        var tcpSocket = net.connect(config.server1_port, config.server1_host);
+        initSocketCallbacks(state, ws, tcpSocket);
+    });
 };
