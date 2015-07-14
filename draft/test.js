@@ -2,22 +2,20 @@
  * Created by Cao Hong Phuoc on 7/3/2015.
  */
 'use strict';
- 
-var x = {};
 
-x['1'] = 1;
-x['2'] = 2;
+var sBuffer = [];
+sBuffer.push('1');
+sBuffer.push('2');
+sBuffer.push('3');
+sBuffer.push('4');
+sBuffer.push('5');
 
-console.log(x);
+console.log(sBuffer)
 
-delete x['1'];
-
-delete x['1'];
-
-try {
-    delete x['3'];
-} catch(e) {
-    console.log(e.stack);
+while(sBuffer.length) {
+    var b = sBuffer.shift()
+    console.log(b);
 }
 
-console.log(x);
+sBuffer.push('6');
+console.log(sBuffer)

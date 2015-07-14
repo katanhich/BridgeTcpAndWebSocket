@@ -9,9 +9,10 @@ var parseData = require('./parse-data');
 function initSocketCallbacks(state, ws, tcpSocket) {
 
     function flushSocketBuffer() {
-        if (state.sBuffer.length > 0) {
-            tcpSocket.write(Buffer.concat(state.sBuffer));
-            state.sBuffer = [];
+        // send each messgae in array
+        while(state.sData.length) {
+            var message = state.sData.shift();
+            tcpSocket.write(message);
         }
     };
 
@@ -65,10 +66,13 @@ function initSocketCallbacks(state, ws, tcpSocket) {
         state.uuid = parseData.getUUId(message);
         StoredSocket.saveClientWebSocket(message, ws);
 
-        if (state.sReady) {
-            tcpSocket.write(message);
-        } else {
-            state.sBuffer.push(message);
+        var query = parseData.getQuery(message);
+        if (query) {
+            if (state.sReady) {
+                tcpSocket.write(query);
+            } else {
+                state.sData.push(query);
+            }
         }
     });
 };
@@ -80,7 +84,7 @@ module.exports = function() {
     wss.on('connection', function (ws) {
         var state = {
             sReady: false, // tcp socket is ready or not
-            sBuffer: [], // buffer for tcpSocket
+            sData: [], // buffer for tcpSocket
             uuid: ''
         };
         var tcpSocket = net.connect(config.server1_port, config.server1_host);

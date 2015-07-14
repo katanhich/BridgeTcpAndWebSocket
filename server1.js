@@ -24,23 +24,31 @@ var server = net.createServer(function (socket) {
     console.log('CONNECTED: ' + socket.remoteAddress + ':' + socket.remotePort);
 
     socket.on('data', function (data) {
-        try {
-            var json = JSON.parse(data.toString('utf8'));
-            console.log('Received data: ' + data.toString());
-            if (json.query === 'ask_time') {
-                socket.write(responseTime(json.uuid));
-            } else {
-                socket.write(reponseError(json.uuid, 'Wrong query'));
-            }
-        } catch (e) {
-            console.log('Data on error: ' + data);
-            console.log(e.stack);
-            socket.write(reponseError('server error'));
+        //try {
+        //    var json = JSON.parse(data.toString('utf8'));
+        //    console.log('Received data: ' + data.toString());
+        //    if (json.query === 'ask_time') {
+        //        socket.write(responseTime(json.uuid));
+        //    } else {
+        //        socket.write(reponseError(json.uuid, 'Wrong query'));
+        //    }
+        //} catch (e) {
+        //    console.log('Data on error: ' + data);
+        //    console.log(e.stack);
+        //    socket.write(reponseError('server error'));
+        //}
+
+        console.log('received ' + data.toString('utf8'));
+        if (data.toString('utf8') === 'ask_time') {
+            socket.write(new Date().toString());
+        } else {
+            socket.write('Wrong query');
         }
     });
 
     socket.on('error', function(err) {
         console.log('socket error');
+        console.log(err.stack);
     });
 
     socket.on('close', function() {
