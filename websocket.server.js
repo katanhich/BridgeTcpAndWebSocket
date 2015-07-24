@@ -1,9 +1,10 @@
 'use strict';
 
-var ws_module = require('ws');
+var WebSocketServer = require('ws').Server;
 var net = require('net');
 var StoredSocket = require('./storedsocket');
 var config = require('./config');
+var parseData = require('./parse-data');
 
 var isConnectedToServer1 = false;
 var tcpConnectToServer1;
@@ -17,13 +18,14 @@ function initConnectToServerOne() {
     });
 
     tcpConnectToServer1.on('data', function (data) {
-        StoredSocket.sendMessage(data, function(err) {
-            if (err) {
-                console.log('Cannot send message to client');
-            } else {
-                console.log('Send successfully message to client');
-            }
-        });
+        // StoredSocket.sendMessage(data, function(err) {
+        //     if (err) {
+        //         console.log('Cannot send message to client');
+        //     } else {
+        //         console.log('Send successfully message to client');
+        //     }
+        // });
+        console.log('Received data from server1: ' + data);
     });
 
     tcpConnectToServer1.on('close', function (error) {
@@ -48,7 +50,7 @@ function sendDataToServerOne(message) {
 }
 
 function startWebSocket() {
-    var wss = new ws_module.Server({host: config.web_socket_host, port: config.web_socket_port});
+    var wss = new WebSocketServer({host: config.web_socket_host, port: config.web_socket_port});
     wss.on('connection', function (ws) {
         var uuid;
 
@@ -66,8 +68,7 @@ function startWebSocket() {
         });
 
         ws.on('message', function (message) {
-            uuid = StoredSocket.getUUId(message);
-
+            uuid = parseData.getUUId(message);
             StoredSocket.saveClientWebSocket(message, ws);
             sendDataToServerOne(message);
         });
