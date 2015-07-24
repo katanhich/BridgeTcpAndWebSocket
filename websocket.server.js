@@ -17,7 +17,6 @@ function initConnectToServerOne() {
     });
 
     tcpConnectToServer1.on('data', function (data) {
-        //ws.send(data, {binary: true, mask: false});
         StoredSocket.sendMessage(data, function(err) {
             if (err) {
                 console.log('Cannot send message to client');
