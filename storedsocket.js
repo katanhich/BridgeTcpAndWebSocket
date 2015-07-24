@@ -30,8 +30,7 @@ module.exports.sendMessage = function(data, callback) {
             callback(new Error('Cannot find uuid'));
         }
     } catch (e) {
-        console.log('Data on error: ' + data);
-        console.log(e.stack);
+        console.log('cannot send data: ' + data);
         callback(e);
     }
 }
